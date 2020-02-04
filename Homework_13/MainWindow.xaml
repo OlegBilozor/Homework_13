@@ -1,0 +1,59 @@
+﻿<Window x:Class="Homework_13.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Homework_13"
+        mc:Ignorable="d"
+        Title="Homework 13" Height="200" Width="400">
+    <Window.Resources>
+        <Style x:Key="TxtBlockMargin" TargetType="TextBlock">
+            <Setter Property="Margin" Value="0 5 5 0"/>
+        </Style>
+        <Style x:Key="TxtBoxMargin" TargetType="TextBox">
+            <Setter Property="Margin" Value="0 5 0 0"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+        </Style>
+        <Style x:Key="BDes" TargetType="TextBlock">
+            <Setter Property="ToolTip"
+                    Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}, Path=Item.Description}"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"></Setter>
+        </Style>
+        <local:SaveToXmlCommand x:Key="SaveToXmlCommand"/>
+    </Window.Resources>
+
+    <DockPanel>
+        <DataGrid DockPanel.Dock="Top" AutoGenerateColumns="False" CanUserDeleteRows="False" CanUserAddRows="False"
+              AlternatingRowBackground="AliceBlue"
+              GridLinesVisibility="Vertical"
+              ItemsSource="{Binding Books}"
+              Name="DtGrid"
+              >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Author" Binding="{Binding Author}"/>
+                <DataGridTextColumn Header="Pages" Binding="{Binding Pages}"/>
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="180" ElementStyle="{StaticResource BDes}"/>
+
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Background="Transparent" ToolTip="Remove book"
+                                BorderThickness="0"
+                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=RemoveFromCollectionCommand}"
+                                CommandParameter="{Binding ElementName=DtGrid, Path=SelectedItem}"
+                                >
+                                <Image Source="Resourses/file.png" Width="10" Height="10"/>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button DockPanel.Dock="Bottom" VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                Content="Save to XML" Command="{StaticResource SaveToXmlCommand}"
+                CommandParameter="{Binding ElementName=DtGrid, Path=Items}"/>
+        
+    </DockPanel>
+</Window>
